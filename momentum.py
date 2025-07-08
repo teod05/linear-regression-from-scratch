@@ -6,7 +6,7 @@ def loss_function(y, y_pred):
     MSE = np.mean(np.square(y_actual - y_pred))
     return MSE
 
-def momentum(x, y, n_iterations=10000, learning_rate=0.01, beta=0.9):
+def momentum(x, y, n_iterations=1000, learning_rate=0.1, beta=0.9):
     """
     Momentum-based gradient descent implementation for linear regression
     
@@ -19,8 +19,8 @@ def momentum(x, y, n_iterations=10000, learning_rate=0.01, beta=0.9):
     
     Returns:
         mse_history: list of MSE values at each iteration
-        final_m: final slope parameter
-        final_b: final intercept parameter
+        m: final slope parameter
+        b: final intercept parameter
     """
     m = 0
     b = 0
@@ -31,15 +31,15 @@ def momentum(x, y, n_iterations=10000, learning_rate=0.01, beta=0.9):
     for i in range(n_iterations):
         y_pred = m * x + b
         
-        # Calculate loss
+        # Calculates loss
         MSE_loss = loss_function(y, y_pred)
         mse_history.append(MSE_loss)
 
-        # Compute gradients
+        # Computes gradients
         m_derivative = (2/len(x)) * np.sum((y_pred - y) * x)
         b_derivative = 2 * np.mean(y_pred - y)
 
-        # Update velocities (momentum)
+        # Updates the momentum
         vm = beta * vm + (1 - beta) * m_derivative
         vb = beta * vb + (1 - beta) * b_derivative
 

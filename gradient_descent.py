@@ -6,7 +6,7 @@ def loss_function(y, y_pred):
     MSE = np.mean(np.square(y_actual - y_pred))
     return MSE
 
-def gradient_descent(x, y, n_iterations=100000, learning_rate=0.01):
+def gradient_descent(x, y, n_iterations=1000, learning_rate=0.1):
     """
     Basic gradient descent implementation for linear regression
     
