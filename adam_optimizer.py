@@ -6,15 +6,17 @@ def loss_function(y, y_pred):
     MSE = np.mean(np.square(y_actual - y_pred))
     return MSE
 
-def adam(x,y, n_iterations=1000, learning_rate=0.1, beta=0.9, beta_2=0.999):
+def adam(x,y, n_iterations=10000, learning_rate=0.01, beta=0.9, beta_2=0.999):
     """
-    xcxxcxcxcxcxcxcxcxcxcxc
+    
     """
     m = 0
     b = 0
     vm = 0
     vb = 0
     mse_history=[]
+    m_history = []
+    b_history = []
     v2m = 0
     v2b = 0
     t= 0
@@ -53,7 +55,11 @@ def adam(x,y, n_iterations=1000, learning_rate=0.1, beta=0.9, beta_2=0.999):
         m = m - learning_rate * (vm_hat / (np.sqrt(v2m_hat) + epsilon))
         b = b - learning_rate * (vb_hat / (np.sqrt(v2b_hat) + epsilon))
 
-    return mse_history, m, b
+        m_history.append(m)
+        b_history.append(b)
+
+
+    return mse_history, m, b, m_history, b_history
 
 
         
