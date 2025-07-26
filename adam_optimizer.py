@@ -6,14 +6,12 @@ def loss_function(y, y_pred):
     MSE = np.mean(np.square(y_actual - y_pred))
     return MSE
 
-def adam(x,y, n_iterations=10000, learning_rate=0.01, beta=0.9, beta_2=0.999):
+def adam(X,y, n_iterations=10000, learning_rate=0.01, beta=0.9, beta_2=0.999):
     """
     
     """
-    m = 0
-    b = 0
-    vm = 0
-    vb = 0
+    theta = np.array([0.0,0.0])
+    theta_velocity = np.array([0.0,0.0])
     mse_history=[]
     m_history = []
     b_history = []
@@ -24,7 +22,7 @@ def adam(x,y, n_iterations=10000, learning_rate=0.01, beta=0.9, beta_2=0.999):
 
     for i in range(n_iterations):
     
-        y_pred = m*x+b
+        y_pred = np.dot(X, theta)
 
         #calucates MSE
         MSE_loss = loss_function(y, y_pred)

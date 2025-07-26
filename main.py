@@ -7,39 +7,41 @@ import time
 
 # Generate centered data
 x_centered = np.random.randn(100)  # Mean=0, std=1
+X_centered = np.column_stack([np.ones_like(x_centered), x_centered])
 noise_centered = np.random.randn(100) * 2
-y_centered = 2 * x_centered + 3 + noise_centered
+y_centered = (2 * x_centered + 3 + noise_centered) #.reshape(-1,1) #making it a column vector
 
 # Generate non-centered data
 x_noncentered = np.random.randn(100) * 2 + 10  # Mean=10, std=2
+X_noncentered = np.column_stack([np.ones_like(x_noncentered), x_noncentered])
 noise_noncentered = np.random.randn(100) * 2
-y_noncentered = 2 * x_noncentered + 3 + noise_noncentered
+y_noncentered = (2 * x_noncentered + 3 + noise_noncentered) #.reshape(-1,11)
 
 # Function to run optimizations and return results
-def run_optimization(x, y):
+def run_optimization(X, y):
     start_time = time.time()
-    mse_gd, m_gd, b_gd, m_gd_history, b_gd_history = gradient_descent(x, y)
+    mse_gd, theta_gd, theta_gd_history = gradient_descent(X, y)
     gd_time = time.time() - start_time
 
     start_time = time.time()
-    mse_mom, m_mom, b_mom, m_mom_history, b_mom_history = momentum(x, y)
+    mse_mom, theta_mom, theta_gd_history = momentum(X, y)
     mom_time = time.time() - start_time
 
     start_time = time.time()
-    mse_adm, m_adm, b_adm, m_adm_history, b_adm_history = adam(x, y)
+    mse_adm, m_adm, b_adm, m_adm_history, b_adm_history = adam(X, y)
     adm_time = time.time() - start_time
 
     return (mse_gd, m_gd, b_gd, m_gd_history, b_gd_history,
             mse_mom, m_mom, b_mom, m_mom_history, b_mom_history,
             mse_adm, m_adm, b_adm, m_adm_history, b_adm_history)
 
-# Run for centered data
-centered_results = run_optimization(x_centered, y_centered)
+# Run for centered data 
+centered_results = run_optimization(X_centered, y_centered)
 
 # Run for non-centered data
-noncentered_results = run_optimization(x_noncentered, y_noncentered)
+noncentered_results = run_optimization(X_noncentered, y_noncentered)
 
-# Visualization for Centered Data
+# # Visualization for Centered Data
 plt.figure(figsize=(12, 5))
 
 # Plot 1: Data and fitted lines (Centered)

@@ -6,12 +6,12 @@ def loss_function(y, y_pred):
     MSE = np.mean(np.square(y_actual - y_pred))
     return MSE
 
-def momentum(x, y, n_iterations=10000, learning_rate=0.01, beta=0.9):
+def momentum(X, y, n_iterations=10000, learning_rate=0.01, beta=0.9):
     """
     Momentum-based gradient descent implementation for linear regression
     
     Args:
-        x: input features
+        X: design matrix (shape: (n, 2))
         y: target values
         n_iterations: number of training iterations
         learning_rate: learning rate for parameter updates
@@ -22,35 +22,28 @@ def momentum(x, y, n_iterations=10000, learning_rate=0.01, beta=0.9):
         m: final slope parameter
         b: final intercept parameter
     """
-    m = 0
-    b = 0
-    vm = 0  # velocity for m
-    vb = 0  # velocity for b
+    theta = np.array([0.0,0.0]) #m and b
+    velocity_theta = np.array([0.0, 0.0]) #velocity for m and velocity for b
     mse_history = []
-    m_history = []
-    b_history = []
+    theta_history = []
 
     for i in range(n_iterations):
-        y_pred = m * x + b
+        y_pred = np.dot(X, theta)
         
         # Calculates loss
         MSE_loss = loss_function(y, y_pred)
         mse_history.append(MSE_loss)
 
         # Computes gradients
-        m_derivative = (2/len(x)) * np.sum((y_pred - y) * x)
-        b_derivative = 2 * np.mean(y_pred - y)
+        grad = (2/len(X)) * np.dot(X.T, (y_pred - y))
 
         # Updates the momentum
-        vm = beta * vm + (1 - beta) * m_derivative
-        vb = beta * vb + (1 - beta) * b_derivative
+        velocity_theta = beta * velocity_theta + learning_rate * grad
 
         # Update parameters using velocities
-        m = m - learning_rate * vm
-        b = b - learning_rate * vb
+        theta = theta - velocity_theta
 
-        m_history.append(m)
-        b_history.append(b)
+        theta_history.append(theta.copy())
 
-    return mse_history, m, b, m_history, b_history
+    return mse_history, theta, theta_history
 
