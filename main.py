@@ -28,12 +28,12 @@ def run_optimization(X, y):
     mom_time = time.time() - start_time
 
     start_time = time.time()
-    mse_adm, m_adm, b_adm, m_adm_history, b_adm_history = adam(X, y)
+    mse_adm, theta_gd_adm, theta_history = adam(X, y)
     adm_time = time.time() - start_time
 
-    return (mse_gd, m_gd, b_gd, m_gd_history, b_gd_history,
-            mse_mom, m_mom, b_mom, m_mom_history, b_mom_history,
-            mse_adm, m_adm, b_adm, m_adm_history, b_adm_history)
+    return (mse_gd, theta_gd, theta_gd_history, mse_mom,
+            theta_mom, theta_gd_history, mse_adm, 
+            theta_gd_adm, theta_history )
 
 # Run for centered data 
 centered_results = run_optimization(X_centered, y_centered)
@@ -48,7 +48,7 @@ plt.figure(figsize=(12, 5))
 plt.subplot(1, 2, 1)
 plt.scatter(x_centered, y_centered, alpha=0.6, label="Data Points")
 plt.plot(x_centered, 2 * x_centered + 3, color='red', label='True line')
-plt.plot(x_centered, centered_results[1] * x_centered + centered_results[2], color='blue', label='Gradient Descent')
+plt.plot(x_centered, centered_results[1][0] * x_centered + centered_results[2], color='blue', label='Gradient Descent')
 plt.plot(x_centered, centered_results[6] * x_centered + centered_results[7], color='green', label='Momentum')
 plt.plot(x_centered, centered_results[11] * x_centered + centered_results[12], color='purple', label='Adam')
 plt.xlabel("x")

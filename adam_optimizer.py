@@ -13,10 +13,8 @@ def adam(X,y, n_iterations=10000, learning_rate=0.01, beta=0.9, beta_2=0.999):
     theta = np.array([0.0,0.0])
     theta_velocity = np.array([0.0,0.0])
     mse_history=[]
-    m_history = []
-    b_history = []
-    v2m = 0
-    v2b = 0
+    theta_history = []
+    theta_2_velocity = np.array([0.0,0.0])
     t= 0
     epsilon = 1e-8 
 
@@ -29,35 +27,26 @@ def adam(X,y, n_iterations=10000, learning_rate=0.01, beta=0.9, beta_2=0.999):
         mse_history.append(MSE_loss)
 
         # Computes gradients
-        m_derivative = (2/len(x)) * np.sum((y_pred - y) * x)
-        b_derivative = 2 * np.mean(y_pred - y)
+        grad = (2/len(X)) * np.dot(X.T, (y_pred - y))
 
         #updates the momentum
-        vm = beta * vm + (1 - beta) * m_derivative
-        vb = beta * vb + (1 - beta) * b_derivative
+        theta_velocity = beta * theta_velocity + learning_rate * grad
 
         #updates second momentum
-        v2m = beta_2 * v2m + (1- beta_2) * m_derivative**2
-        v2b = beta_2 * v2b + (1- beta_2) * b_derivative**2
+        v2m = beta_2 * theta_2_velocity + (1- beta_2) * grad**2
         #bias corrected first moments
         t+=1
-        vm_hat = vm / (1-beta**t)
-        vb_hat = vb / (1-beta**t)
+        theta_hat = theta_velocity / (1-beta**t)
 
         #biast corrected second moments
-        v2m_hat = v2m / (1-beta_2**t)
-        v2b_hat = v2b / (1-beta_2**t)
-
+        theta_2_hat = theta_2_velocity / (1-beta_2**t)
         #updating the values
 
-        m = m - learning_rate * (vm_hat / (np.sqrt(v2m_hat) + epsilon))
-        b = b - learning_rate * (vb_hat / (np.sqrt(v2b_hat) + epsilon))
+        theta = theta - learning_rate * (theta_hat / (np.sqrt(theta_2_hat) + epsilon))
 
-        m_history.append(m)
-        b_history.append(b)
+        theta_history.append(theta.copy())
 
-
-    return mse_history, m, b, m_history, b_history
+    return mse_history, theta, theta_history
 
 
         
